@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5f8b">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>نورد ۵ قفسه و اثر غلتک</title>
+<style>
+:root{--bg:#eef1f4;--card:#fff;--tx:#16212b;--mut:#5b6b7a;--bd:#cfd8e0;--ac:#1f5f8b;--hit:#dff1e6;--inb:#f7f9fb;--bad:#c0392b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0f1419;--card:#18202a;--tx:#e6ecf1;--mut:#8fa1b2;--bd:#2c3a48;--ac:#6fb1e0;--hit:#17382a;--inb:#121920;--bad:#ff8a7a}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0f1419;--card:#18202a;--tx:#e6ecf1;--mut:#8fa1b2;--bd:#2c3a48;--ac:#6fb1e0;--hit:#17382a;--inb:#121920;--bad:#ff8a7a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.6 Vazirmatn,Tahoma,system-ui,sans-serif}
+.w{max-width:780px;margin:0 auto;padding:14px}
+h1{font-size:18px;margin:4px 0 12px}
+h2{font-size:15px;margin:0 0 8px}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:1;padding:10px 6px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:12px;margin-bottom:12px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+label{display:block;font-size:13px;color:var(--mut);margin-bottom:3px}
+input,select{width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--bd);border-radius:6px;background:var(--inb);color:var(--tx);font:inherit;direction:ltr;text-align:center}
+input[readonly]{opacity:.6}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.k{border:1px solid var(--bd);border-radius:6px;padding:8px 4px;text-align:center;background:var(--inb)}
+.k b{display:block;font-size:20px;color:var(--ac);direction:ltr}
+.k span{font-size:12px;color:var(--mut)}
+.sc{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:13px}
+th,td{border-bottom:1px solid var(--bd);padding:6px 4px;text-align:center;white-space:nowrap}
+th{color:var(--mut);font-weight:600;font-size:12px}
+td input{width:86px;padding:5px}
+td.v{direction:ltr}
+tr.hit td{background:var(--hit)}
+.bad{color:var(--bad)}
+.btn{margin-top:10px;padding:9px 14px;border:1px solid var(--ac);background:transparent;color:var(--ac);border-radius:6px;font:inherit;cursor:pointer}
+.note{font-size:12px;color:var(--mut);margin:8px 0 0}
+.panel{display:none}.panel.on{display:block}
+#res{margin:0;padding:0;list-style:none}
+#res li{padding:4px 0}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>نورد ۵ قفسه: برنامهٔ ضخامت و اثر غلتک</h1>
+<div class="tabs"><button class="on" data-t="p1">برنامهٔ ضخامت</button><button data-t="p2">غلتک و گام اثر</button></div>
+
+<div class="panel on" id="p1">
+ <div class="card"><div class="g">
+  <div><label for="n">تعداد قفسه در مدار</label><select id="n" data-k="n"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
+  <div><label for="h0">ضخامت ورودی (mm)</label><input id="h0" data-k="h0" inputmode="decimal"></div>
+  <div><label for="hf">ضخامت خروجی (mm)</label><input id="hf" data-k="hf" inputmode="decimal"></div>
+  <div><label for="w">عرض کلاف (mm)</label><input id="w" data-k="w" inputmode="decimal"></div>
+  <div><label for="wt">وزن کلاف (kg)</label><input id="wt" data-k="wt" inputmode="decimal"></div>
+ </div>
+ <button class="btn" id="auto">توزیع خودکار ضخامت قفسه‌ها</button>
+ <p class="note" id="msg"></p></div>
+ <div class="card"><div class="sum">
+  <div class="k"><b id="sRd">—</b><span>ریداکشن مورد نیاز (٪)</span></div>
+  <div class="k"><b id="sEl">—</b><span>الانگیشن مورد نیاز (٪)</span></div>
+  <div class="k"><b id="sDr">—</b><span>کل افت ضخامت (mm)</span></div>
+  <div class="k"><b id="sL0">—</b><span>طول ورودی (m)</span></div>
+  <div class="k"><b id="sL1">—</b><span>طول بعد از نورد (m)</span></div>
+  <div class="k"><b id="sRt">—</b><span>ضخامت خروجی ÷ ورودی (٪)</span></div>
+ </div></div>
+ <div class="card"><div class="sc"><table><thead><tr><th>قفسه</th><th>ضخامت ورودی</th><th>ضخامت خروجی</th><th>افت ضخامت</th><th>ریداکشن ٪</th><th>تغییر طول ٪</th><th>خروجی ÷ ورودی ٪</th><th>طول بعد از قفسه (m)</th></tr></thead><tbody id="t1"></tbody></table></div>
+ <p class="note">ضخامت خروجی هر قفسه قابل ویرایش است. خروجی آخرین قفسه همان ضخامت خروجی نهایی است. تغییر طول = (ضخامت ورودی ÷ ضخامت خروجی − ۱) × ۱۰۰. طول = وزن ÷ (۷٫۸۵ × عرض × ضخامت) با چگالی ۷٫۸۵ گرم بر سانتی‌متر مکعب، بدون در نظر گرفتن ضایعات و پهن‌شدگی.</p></div>
+</div>
+
+<div class="panel" id="p2">
+ <div class="card"><div class="g">
+  <div><label for="n2">تعداد قفسه در مدار</label><select id="n2" data-k="n"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
+  <div><label for="meas">گام اثر روی ورق بعد از نورد (mm)</label><input id="meas" data-k="meas" inputmode="decimal"></div>
+  <div><label for="fs">لغزش به جلو (٪)</label><input id="fs" data-k="fs" inputmode="decimal"></div>
+  <div><label for="tol">تلورانس تطبیق (٪)</label><input id="tol" data-k="tol" inputmode="decimal"></div>
+ </div>
+ <p class="note">قطر غلتک را وارد کنید تا گام اثر بعد از نورد محاسبه شود. گام اثر را وارد کنید تا قطر و گام غلتک لازم برای هر قفسه به دست آید. ضخامت‌ها از تب اول گرفته می‌شود.</p></div>
+ <div class="card"><h2>مظنون‌ها</h2><ul id="res"><li class="note">گام اثر و قطر غلتک‌ها را وارد کنید.</li></ul></div>
+ <div class="card"><h2>غلتک کاری</h2><div class="sc"><table><thead><tr><th>قفسه</th><th>قطر (mm)</th><th>گام غلتک πD</th><th>گام اثر بعد از نورد</th><th>گام غلتک لازم</th><th>قطر لازم</th><th>انحراف ٪</th></tr></thead><tbody id="tw"></tbody></table></div></div>
+ <div class="card"><h2>غلتک پشتیبان</h2><div class="sc"><table><thead><tr><th>قفسه</th><th>قطر (mm)</th><th>گام غلتک πD</th><th>گام اثر بعد از نورد</th><th>گام غلتک لازم</th><th>قطر لازم</th><th>انحراف ٪</th></tr></thead><tbody id="tb"></tbody></table></div>
+ <p class="note">گام اثر بعد از نورد = πD × (۱ + لغزش) × (ضخامت خروجی همان قفسه ÷ ضخامت نهایی). پهن‌شدگی نادیده گرفته شده است. اثر غلتک پشتیبان هم با قطر خودش روی ورق منتقل می‌شود.</p></div>
+</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const PI=Math.PI;
+const S={n:'5',h0:'',hf:'',w:'',wt:'',fs:'0',meas:'',tol:'3',hs:['','','','',''],dw:['','','','',''],db:['','','','','']};
+try{Object.assign(S,JSON.parse(localStorage.getItem('mill5')||'{}'))}catch(e){}
+function save(){try{localStorage.setItem('mill5',JSON.stringify(S))}catch(e){}}
+function num(v){v=String(v==null?'':v).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫,،]/g,'.');return v.trim()===''?NaN:parseFloat(v)}
+function f(x,d){d=d==null?2:d;return isFinite(x)?String(+x.toFixed(d)):'—'}
+// build rows
+let h='';
+for(let i=0;i<5;i++)h+=`<tr id="r1_${i}"><td>${i+1}</td><td class="v" id="hin${i}"></td><td><input id="hs${i}" data-k="hs" data-i="${i}" inputmode="decimal"></td><td class="v" id="dr${i}"></td><td class="v" id="rd${i}"></td><td class="v" id="el${i}"></td><td class="v" id="rt${i}"></td><td class="v" id="ln${i}"></td></tr>`;
+$('t1').innerHTML=h;
+['dw','db'].forEach(t=>{let s='';for(let i=0;i<5;i++)s+=`<tr id="r_${t}${i}"><td>${i+1}</td><td><input id="${t}${i}" data-k="${t}" data-i="${i}" inputmode="decimal"></td><td class="v" id="p${t}${i}"></td><td class="v" id="a${t}${i}"></td><td class="v" id="q${t}${i}"></td><td class="v" id="d${t}${i}"></td><td class="v" id="e${t}${i}"></td></tr>`;$(t==='dw'?'tw':'tb').innerHTML=s});
+// restore values
+['n','h0','hf','w','wt','fs','meas','tol'].forEach(k=>$(k).value=S[k]);
+for(let i=0;i<5;i++){$('hs'+i).value=S.hs[i];$('dw'+i).value=S.dw[i];$('db'+i).value=S.db[i]}
+
+function calc(){
+ const n=+S.n,h0=num(S.h0),hf=num(S.hf),fs=isFinite(num(S.fs))?num(S.fs):0,m=num(S.meas),tol=isFinite(num(S.tol))?num(S.tol):3;
+ $('n').value=S.n;$('n2').value=S.n;
+ const out=[];
+ for(let i=0;i<5;i++){
+  const el=$('hs'+i);
+  if(i===n-1){el.readOnly=true;el.value=S.hf}
+  else if(el.readOnly){el.readOnly=false;el.value=S.hs[i]}
+  out.push(i===n-1?hf:num(S.hs[i]));
+ }
+ $('sRd').textContent=f((h0-hf)/h0*100,1);
+ $('sEl').textContent=f((h0/hf-1)*100,1);
+ $('sDr').textContent=f(h0-hf,3);
+ const K=num(S.wt)/(7.85e-3*num(S.w));
+ $('sL0').textContent=f(K/h0,0);
+ $('sL1').textContent=f(K/hf,0);
+ $('sRt').textContent=f(hf/h0*100,1);
+ for(let i=0;i<5;i++){
+  const on=i<n;
+  $('r1_'+i).style.display=on?'':'none';
+  ['dw','db'].forEach(t=>$('r_'+t+i).style.display=on?'':'none');
+  if(!on)continue;
+  const hin=i===0?h0:out[i-1],ho=out[i];
+  $('hin'+i).textContent=f(hin,3);
+  $('dr'+i).textContent=f(hin-ho,3);
+  $('rd'+i).textContent=f((hin-ho)/hin*100,1);
+  $('el'+i).textContent=f((hin/ho-1)*100,1);
+  $('ln'+i).textContent=f(K/ho,0);
+  $('rt'+i).textContent=f(ho/hin*100,1);
+  const bad=isFinite(hin)&&isFinite(ho)&&ho>=hin;
+  $('r1_'+i).className=bad?'bad':'';
+ }
+ // tab 2
+ const hits=[];
+ for(let i=0;i<n;i++){
+  const r=out[i]/hf*(1+fs/100);
+  [['dw','کاری'],['db','پشتیبان']].forEach(([t,name])=>{
+   const D=num(S[t][i]),pr=PI*D,after=pr*r,reqP=m/r,reqD=reqP/PI,dev=(after-m)/m*100;
+   $('p'+t+i).textContent=f(pr,1);
+   $('a'+t+i).textContent=f(after,1);
+   $('q'+t+i).textContent=f(reqP,1);
+   $('d'+t+i).textContent=f(reqD,1);
+   $('e'+t+i).textContent=isFinite(dev)?(dev>0?'+':'')+f(dev,1):'—';
+   const hit=isFinite(dev)&&Math.abs(dev)<=tol;
+   $('r_'+t+i).className=hit?'hit':'';
+   if(hit)hits.push({i,name,dev});
+  });
+ }
+ hits.sort((a,b)=>Math.abs(a.dev)-Math.abs(b.dev));
+ $('res').innerHTML=hits.length?hits.map(x=>`<li>قفسه ${x.i+1}، غلتک ${x.name}: انحراف ${x.dev>0?'+':''}${f(x.dev,1)}٪</li>`).join(''):'<li class="note">'+(isFinite(m)?'غلتکی با این گام تطبیق ندارد. قطر لازم را در جدول‌ها با بازهٔ قطر غلتک‌ها مقایسه کنید.':'گام اثر و قطر غلتک‌ها را وارد کنید.')+'</li>';
+}
+document.addEventListener('input',e=>{
+ const t=e.target,k=t.dataset&&t.dataset.k;if(!k)return;
+ if(t.dataset.i!==undefined)S[k][+t.dataset.i]=t.value;else S[k]=t.value;
+ calc();save();
+});
+$('auto').onclick=()=>{
+ const n=+S.n,h0=num(S.h0),hf=num(S.hf);
+ if(!(h0>hf&&hf>0)){$('msg').textContent='ضخامت ورودی را بزرگ‌تر از ضخامت خروجی وارد کنید.';return}
+ $('msg').textContent='ضخامت قفسه‌ها با توزیع نزولی ریداکشن پر شد و قابل ویرایش است.';
+ const p=[1,.9,.75,.55,.3].slice(0,n),s=p.reduce((a,b)=>a+b),L=Math.log(h0/hf);let ln=Math.log(h0);
+ for(let i=0;i<n-1;i++){ln-=L*p[i]/s;S.hs[i]=String(+Math.exp(ln).toFixed(3));$('hs'+i).value=S.hs[i]}
+ calc();save();
+};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+ document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id===b.dataset.t));
+});
+calc();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
