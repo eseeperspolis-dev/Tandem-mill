@@ -46,7 +46,7 @@ tr.hit td{background:var(--hit)}
 </head>
 <body>
 <div class="w">
-<h1>نورد ۵ قفسه: برنامهٔ ضخامت و اثر غلتک</h1>
+<h1>نورد ۵ قفسه: برنامهٔ ضخامت و اثر غلتک <span class="note">(نسخه ۳)</span></h1>
 <div class="tabs"><button class="on" data-t="p1">برنامهٔ ضخامت</button><button data-t="p2">غلتک و گام اثر</button></div>
 
 <div class="panel on" id="p1">
@@ -77,8 +77,10 @@ tr.hit td{background:var(--hit)}
   <div><label for="meas">گام اثر روی ورق بعد از نورد (mm)</label><input id="meas" data-k="meas" inputmode="decimal"></div>
   <div><label for="fs">لغزش به جلو (٪)</label><input id="fs" data-k="fs" inputmode="decimal"></div>
   <div><label for="tol">تلورانس تطبیق (٪)</label><input id="tol" data-k="tol" inputmode="decimal"></div>
+  <div><label for="cw">قطرهای ممکن غلتک کاری (mm)</label><input id="cw" data-k="cw"></div>
+  <div><label for="cb">قطرهای ممکن غلتک پشتیبان (mm)</label><input id="cb" data-k="cb"></div>
  </div>
- <p class="note">قطر غلتک را وارد کنید تا گام اثر بعد از نورد محاسبه شود. گام اثر را وارد کنید تا قطر و گام غلتک لازم برای هر قفسه به دست آید. ضخامت‌ها از تب اول گرفته می‌شود.</p></div>
+ <p class="note">اگر قطر غلتک یکی از چند مقدار مشخص است، آن‌ها را با ویرگول جدا کنید. همهٔ قفسه‌ها با همهٔ این قطرها بررسی می‌شوند. قطر غلتک را وارد کنید تا گام اثر بعد از نورد محاسبه شود. گام اثر را وارد کنید تا قطر و گام غلتک لازم برای هر قفسه به دست آید. ضخامت‌ها از تب اول گرفته می‌شود.</p></div>
  <div class="card"><h2>مظنون‌ها</h2><ul id="res"><li class="note">گام اثر و قطر غلتک‌ها را وارد کنید.</li></ul></div>
  <div class="card"><h2>غلتک کاری</h2><div class="sc"><table><thead><tr><th>قفسه</th><th>قطر (mm)</th><th>گام غلتک πD</th><th>گام اثر بعد از نورد</th><th>گام غلتک لازم</th><th>قطر لازم</th><th>انحراف ٪</th></tr></thead><tbody id="tw"></tbody></table></div></div>
  <div class="card"><h2>غلتک پشتیبان</h2><div class="sc"><table><thead><tr><th>قفسه</th><th>قطر (mm)</th><th>گام غلتک πD</th><th>گام اثر بعد از نورد</th><th>گام غلتک لازم</th><th>قطر لازم</th><th>انحراف ٪</th></tr></thead><tbody id="tb"></tbody></table></div>
@@ -88,7 +90,7 @@ tr.hit td{background:var(--hit)}
 <script>
 const $=id=>document.getElementById(id);
 const PI=Math.PI;
-const S={n:'5',h0:'',hf:'',w:'',wt:'',fs:'0',meas:'',tol:'3',hs:['','','','',''],dw:['','','','',''],db:['','','','','']};
+const S={n:'5',h0:'',hf:'',w:'',wt:'',cw:'520,610',cb:'1520,1410',fs:'0',meas:'',tol:'3',hs:['','','','',''],dw:['','','','',''],db:['','','','','']};
 try{Object.assign(S,JSON.parse(localStorage.getItem('mill5')||'{}'))}catch(e){}
 function save(){try{localStorage.setItem('mill5',JSON.stringify(S))}catch(e){}}
 function num(v){v=String(v==null?'':v).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫,،]/g,'.');return v.trim()===''?NaN:parseFloat(v)}
@@ -99,7 +101,7 @@ for(let i=0;i<5;i++)h+=`<tr id="r1_${i}"><td>${i+1}</td><td class="v" id="hin${i
 $('t1').innerHTML=h;
 ['dw','db'].forEach(t=>{let s='';for(let i=0;i<5;i++)s+=`<tr id="r_${t}${i}"><td>${i+1}</td><td><input id="${t}${i}" data-k="${t}" data-i="${i}" inputmode="decimal"></td><td class="v" id="p${t}${i}"></td><td class="v" id="a${t}${i}"></td><td class="v" id="q${t}${i}"></td><td class="v" id="d${t}${i}"></td><td class="v" id="e${t}${i}"></td></tr>`;$(t==='dw'?'tw':'tb').innerHTML=s});
 // restore values
-['n','h0','hf','w','wt','fs','meas','tol'].forEach(k=>$(k).value=S[k]);
+['n','h0','hf','w','wt','cw','cb','fs','meas','tol'].forEach(k=>$(k).value=S[k]);
 for(let i=0;i<5;i++){$('hs'+i).value=S.hs[i];$('dw'+i).value=S.dw[i];$('db'+i).value=S.db[i]}
 
 function calc(){
@@ -147,11 +149,15 @@ function calc(){
    $('e'+t+i).textContent=isFinite(dev)?(dev>0?'+':'')+f(dev,1):'—';
    const hit=isFinite(dev)&&Math.abs(dev)<=tol;
    $('r_'+t+i).className=hit?'hit':'';
-   if(hit)hits.push({i,name,dev});
+   if(hit)hits.push({i,name,dev,D});
   });
  }
+ const lst=s=>String(s||'').split(/[\s,،٬;]+/).map(num).filter(x=>isFinite(x));
+ for(let i=0;i<n;i++){const r=out[i]/hf*(1+fs/100);
+  [['کاری',S.cw],['پشتیبان',S.cb]].forEach(([name,s])=>lst(s).forEach(D=>{const dev=(PI*D*r-m)/m*100;
+   if(isFinite(dev)&&Math.abs(dev)<=tol&&!hits.some(x=>x.i===i&&x.name===name&&Math.abs(x.D-D)<1e-9))hits.push({i,name,dev,D})}))}
  hits.sort((a,b)=>Math.abs(a.dev)-Math.abs(b.dev));
- $('res').innerHTML=hits.length?hits.map(x=>`<li>قفسه ${x.i+1}، غلتک ${x.name}: انحراف ${x.dev>0?'+':''}${f(x.dev,1)}٪</li>`).join(''):'<li class="note">'+(isFinite(m)?'غلتکی با این گام تطبیق ندارد. قطر لازم را در جدول‌ها با بازهٔ قطر غلتک‌ها مقایسه کنید.':'گام اثر و قطر غلتک‌ها را وارد کنید.')+'</li>';
+ $('res').innerHTML=hits.length?hits.map(x=>`<li>قفسه ${x.i+1}، غلتک ${x.name} قطر ${f(x.D,1)} mm: انحراف ${x.dev>0?'+':''}${f(x.dev,1)}٪</li>`).join(''):'<li class="note">'+(isFinite(m)?(isFinite(hf)?'':'ابتدا ضخامت خروجی را در تب اول وارد کنید. ')+'غلتکی با این گام تطبیق ندارد. قطر لازم را در جدول‌ها با بازهٔ قطر غلتک‌ها مقایسه کنید.':'گام اثر و قطر غلتک‌ها را وارد کنید.')+'</li>';
 }
 document.addEventListener('input',e=>{
  const t=e.target,k=t.dataset&&t.dataset.k;if(!k)return;
